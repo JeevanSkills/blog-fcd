@@ -34,8 +34,8 @@ export async function POST(req: Request) {
 
     const result = await collection.insertOne(newBlog);
     return NextResponse.json(result, { status: 201 });
-  } catch (e: unknown) {
-    console.error("POST error:", e instanceof Error ? e.message : e);
+  } catch (error) {
+    console.error("POST error:", error);
     return NextResponse.json({ error: "Failed to create blog" }, { status: 500 });
   }
 }
@@ -80,8 +80,8 @@ export async function GET(req: NextRequest) {
     }));
 
     return NextResponse.json({ ...paginatedBlogs, data: blogs });
-  } catch (e: unknown) {
-    console.error("GET error:", e instanceof Error ? e.message : e);
+  } catch (error) {
+    console.error("GET error:", error);
     return NextResponse.json({ error: "Failed to fetch blogs" }, { status: 500 });
   }
 }
