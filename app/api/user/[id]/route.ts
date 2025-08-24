@@ -24,7 +24,7 @@ export async function GET(
     }
 
     return NextResponse.json(user);
-  } catch (_error: any) {
+  } catch (e: unknown) {
     return new NextResponse(
       JSON.stringify({ error: "Failed to fetch user data" }),
       {
