@@ -10,7 +10,6 @@ export default function LoginPage() {
     alert("Invalid email format");
     }
 
-    // Proceed with login logic...
   };
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
@@ -40,7 +39,7 @@ export default function LoginPage() {
         </form>
         <p className="mt-6 text-sky-700">
           Don&apos;t have an account?{" "}
-          <a href="/signup" className="underline hover:text-sky-900">
+          <a href="/register" className="underline hover:text-sky-900">
             Sign Up
           </a>
         </p>

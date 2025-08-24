@@ -1,4 +1,4 @@
-import Image from "next/image";
+'use client';
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
             Login
           </a>
           <a
-            href="/signup"
+            href="/register"
             className="bg-white border border-sky-600 text-sky-700 px-6 py-3 rounded-lg font-semibold hover:bg-sky-50 transition"
           >
             Sign Up
