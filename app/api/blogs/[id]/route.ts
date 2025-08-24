@@ -8,8 +8,9 @@ import { ObjectId } from "mongodb";
 // Get a single blog post
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params: paramsPromise }: { params: Promise<{ id: string }> }
 ) {
+  const params = await paramsPromise;
   try {
     const dbClient = await clientPromise;
     const db = dbClient.db("blog-faircode");
@@ -39,8 +40,9 @@ export async function GET(
 // Update a blog post
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params: paramsPromise }: { params: Promise<{ id: string }> }
 ) {
+  const params = await paramsPromise;
   const session: Session | null = await getServerSession(authOptions);
   if (!session || !session.user) {
     return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
@@ -101,8 +103,9 @@ export async function PUT(
 // Delete a blog post
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params: paramsPromise }: { params: Promise<{ id: string }> }
 ) {
+  const params = await paramsPromise;
   const session: Session | null = await getServerSession(authOptions);
   if (!session || !session.user) {
     return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
