@@ -105,8 +105,8 @@ export default function ProfilePage() {
             {blogs.length > 0 ? (
               blogs.map((blog) => (
                 <Link key={blog._id} href={`/blogs/${blog._id}`} className="block bg-white p-6 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all">
-                  <h3 className="text-xl font-bold text-sky-700 mb-2">{blog.title}</h3>
-                  <p className="text-sm text-gray-500">
+                  <h3 className="text-xl font-bold text-sky-700 mb-2 break-words">{blog.title}</h3>
+                  <p className="text-sm text-gray-500 break-words">
                     Published on {new Date(blog.createdAt).toLocaleDateString()}
                   </p>
                 </Link>

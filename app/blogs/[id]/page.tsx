@@ -33,7 +33,11 @@ export default function BlogPage() {
           const data = await res.json();
           setBlog(data);
         } catch (err) {
-          setError(err.message);
+          if (err instanceof Error) {
+            setError(err.message);
+          } else {
+            setError('An unknown error occurred');
+          }
         } finally {
           setLoading(false);
         }
@@ -51,12 +55,15 @@ export default function BlogPage() {
         });
 
         if (!res.ok) {
-          throw new Error('Failed to delete post');
+          throw new Error('Failed to delete blog');
         }
-
         router.push('/blogs');
       } catch (err) {
-        setError(err.message);
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       }
     }
   };
@@ -74,7 +81,7 @@ export default function BlogPage() {
         <p className="text-sm text-gray-500 mb-6">
           Published on {new Date(blog.createdAt).toLocaleDateString()}
         </p>
-        <div className="prose lg:prose-xl max-w-none text-gray-800">
+        <div className="prose lg:prose-xl max-w-none text-gray-800 break-words">
           {blog.content}
         </div>
 

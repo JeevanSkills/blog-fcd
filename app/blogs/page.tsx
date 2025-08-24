@@ -9,6 +9,8 @@ interface Blog {
   title: string;
   content: string;
   createdAt: string;
+  updatedAt: string;
+  authorInfo: { username: string };
 }
 
 interface PaginatedResponse {
@@ -78,13 +80,14 @@ export default function BlogsPage() {
                   <div key={blog._id} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                     <h2 className="text-2xl font-bold text-sky-700 mb-2">{blog.title}</h2>
                     <p className="text-gray-600 mb-4">{blog.content.substring(0, 150)}...</p>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center text-sm text-gray-500">
+                      <span>By {blog.authorInfo?.username}</span>
+                      <span>Last updated: {new Date(blog.updatedAt).toLocaleDateString()}</span>
+                    </div>
+                    <div className="mt-4">
                       <Link href={`/blogs/${blog._id}`} className="text-sky-600 hover:underline">
                         Read More
                       </Link>
-                      <span className="text-sm text-gray-500">
-                        {new Date(blog.createdAt).toLocaleDateString()}
-                      </span>
                     </div>
                   </div>
                 ))
@@ -118,3 +121,4 @@ export default function BlogsPage() {
     </main>
   );
 }
+

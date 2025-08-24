@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth/next";
+import type { Session } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
 import clientPromise from "../../db";
@@ -24,7 +25,7 @@ export async function GET(
     }
 
     return NextResponse.json(blog);
-  } catch (error) {
+  } catch (_error: any) {
     return new NextResponse(
       JSON.stringify({ error: "Failed to fetch blog" }),
       {
@@ -40,7 +41,7 @@ export async function PUT(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
+  const session: Session | null = await getServerSession(authOptions);
   if (!session || !session.user) {
     return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
@@ -73,7 +74,7 @@ export async function PUT(
       });
     }
 
-    if (blog.authorId.toString() !== session.user.email) {
+    if (blog.authorId.toString() !== session.user.id) {
       return new NextResponse(JSON.stringify({ error: "Forbidden" }), {
         status: 403,
         headers: { "Content-Type": "application/json" },
@@ -86,7 +87,7 @@ export async function PUT(
     );
 
     return NextResponse.json(result);
-  } catch (error) {
+  } catch (_error: any) {
     return new NextResponse(
       JSON.stringify({ error: "Failed to update blog" }),
       {
@@ -102,7 +103,7 @@ export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
+  const session: Session | null = await getServerSession(authOptions);
   if (!session || !session.user) {
     return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
@@ -124,7 +125,7 @@ export async function DELETE(
       });
     }
 
-    if (blog.authorId.toString() !== session.user.email) {
+    if (blog.authorId.toString() !== session.user.id) {
       return new NextResponse(JSON.stringify({ error: "Forbidden" }), {
         status: 403,
         headers: { "Content-Type": "application/json" },
@@ -134,7 +135,7 @@ export async function DELETE(
     await collection.deleteOne({ _id: new ObjectId(params.id) });
 
     return new NextResponse(null, { status: 204 });
-  } catch (error) {
+  } catch (_error: any) {
     return new NextResponse(
       JSON.stringify({ error: "Failed to delete blog" }),
       {

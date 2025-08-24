@@ -26,7 +26,7 @@ export default function EditBlogPage() {
           const data = await res.json();
 
           // Security check: only the author can edit
-          if (session?.user?.email !== data.email) {
+          if (session?.user?.id !== data.authorId) {
             router.push('/unauthorized'); // Or some other error page
             return;
           }
