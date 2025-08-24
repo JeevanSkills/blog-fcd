@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 
     const result = await collection.insertOne(newBlog);
     return NextResponse.json(result, { status: 201 });
-  } catch (_error: any) {
+  } catch (_error: unknown) {
     console.error("POST error:", _error);
     return NextResponse.json({ error: "Failed to create blog" }, { status: 500 });
   }
@@ -73,14 +73,14 @@ export async function GET(req: NextRequest) {
 
     const paginatedBlogs = await paginate(req, blogsCollection, pipeline);
 
-    const blogs = paginatedBlogs.data.map((blog: any) => ({
+    const blogs = paginatedBlogs.data.map((blog) => ({
       ...blog,
       _id: blog._id.toString(),
       authorId: blog.authorId?.toString(),
     }));
 
     return NextResponse.json({ ...paginatedBlogs, data: blogs });
-  } catch (_error: any) {
+  } catch (_error: unknown) {
     console.error("GET error:", _error);
     return NextResponse.json({ error: "Failed to fetch blogs" }, { status: 500 });
   }
