@@ -62,9 +62,9 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, token }: { session: Session; token: any }) {
-      if (session.user) {
-        session.user.id = token.id as string;
+    async session({ session, token }: { session: Session; token: string | unknown }) {
+      if (session.user && typeof token === "object" && token !== null && "id" in token) {
+        session.user.id = (token as { id: string }).id;
       }
       return session;
     },
