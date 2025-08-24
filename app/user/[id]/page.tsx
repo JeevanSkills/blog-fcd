@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react'; // Import useSession
+import Image from 'next/image'; // Add this import
 
 interface UserProfile {
   _id: string;
@@ -170,9 +171,11 @@ export default function ProfilePage() {
       <div className="max-w-4xl mx-auto">
         {/* Profile Header */}
         <div className="bg-white rounded-2xl shadow-2xl p-8 flex flex-col md:flex-row items-center gap-8 border border-sky-300">
-          <img
+          <Image
             src={profile.imageUrl || `https://avatar.vercel.sh/${profile.username}.svg`}
             alt={profile.username}
+            width={128} // Added width
+            height={128} // Added height
             className="w-32 h-32 rounded-full border-4 border-sky-500 object-cover"
           />
           <div className="text-center md:text-left flex-grow">

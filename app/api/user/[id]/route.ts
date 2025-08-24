@@ -5,6 +5,12 @@ import { getServerSession } from "next-auth/next"; // Import for authentication
 import { authOptions } from "../../auth/[...nextauth]/route"; // Import auth options
 import { hash, compare } from "bcryptjs"; // Import for password hashing
 
+interface UpdateUserFields {
+  username?: string;
+  email?: string;
+  password?: string;
+}
+
 export async function GET(
   req: Request,
   { params: paramsPromise }: { params: Promise<{ id: string }> }
@@ -29,6 +35,7 @@ export async function GET(
 
     return NextResponse.json(user);
   } catch (e: unknown) {
+    console.error("Failed to fetch user data:", e);
     return new NextResponse(
       JSON.stringify({ error: "Failed to fetch user data" }),
       {
@@ -66,9 +73,9 @@ export async function PUT(
         status: 404,
         headers: { "Content-Type": "application/json" },
       });
-    }
+    };
 
-    const updateFields: { [key: string]: any } = {};
+    const updateFields: UpdateUserFields = {};
 
     if (username && username !== user.username) {
       updateFields.username = username;

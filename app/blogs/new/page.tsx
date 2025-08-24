@@ -10,7 +10,7 @@ export default function NewBlogPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: _session, status } = useSession();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ export default function NewBlogPage() {
         throw new Error(errorData.error || 'Failed to create post');
       }
 
-      const newPost = await res.json();
+      const _newPost = await res.json();
       // It's better to redirect to the new post's page, but the API returns the full result object.
       // We'll just redirect to the main blogs page for now.
       router.push('/blogs');
