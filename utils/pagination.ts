@@ -12,7 +12,7 @@ interface PaginationResult<T> {
 export async function paginate<T extends BsonDocument>(
   request: NextRequest,
   collection: Collection<T>,
-  pipeline: any[] = []
+  pipeline: BsonDocument[] = []
 ): Promise<PaginationResult<T>> {
   const url = new URL(request.url);
   const page = parseInt(url.searchParams.get("page") || "1", 10);
