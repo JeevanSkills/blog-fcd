@@ -1,15 +1,45 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import { isValidEmail } from "@/utils/validation";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
     if (!isValidEmail(email)) {
-    alert("Invalid email format");
+      setError("Invalid email format");
+      return;
+    }
+    if (!password) {
+      setError("Password is required.");
+      return;
     }
 
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (result?.error) {
+        setError("Invalid email or password.");
+      } else {
+        router.push("/blogs");
+      }
+    } catch (error) {
+      setError("An unexpected error occurred. Please try again.");
+      console.error("Login error:", error);
+    }
   };
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
@@ -18,6 +48,7 @@ export default function LoginPage() {
           Login to Blog-faircode
         </h2>
         <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
           <input
             type="text"
             placeholder="Email"
@@ -28,6 +59,8 @@ export default function LoginPage() {
           <input
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="px-4 py-3 rounded-lg border border-sky-200 focus:outline-none focus:ring-2 focus:ring-sky-400 placeholder-sky-400"
           />
           <button
@@ -39,9 +72,9 @@ export default function LoginPage() {
         </form>
         <p className="mt-6 text-sky-700">
           Don&apos;t have an account?{" "}
-          <a href="/register" className="underline hover:text-sky-900">
+          <Link href="/register" className="underline hover:text-sky-900">
             Sign Up
-          </a>
+          </Link>
         </p>
       </div>
     </main>

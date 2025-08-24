@@ -1,7 +1,19 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import clientPromise from "../../db";
 import { compare } from "bcryptjs";
+
+// Extend the Session type to include id on user
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    }
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -26,7 +38,6 @@ export const authOptions: NextAuthOptions = {
         if (!user) {
           return null;
         }
-
         const isPasswordCorrect = await compare(
           credentials.password,
           user.password
@@ -44,11 +55,22 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  session: {
-    strategy: "jwt",
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
   },
   pages: {
-    signIn: '/login', 
+    signIn: "/login",
   },
 };
 

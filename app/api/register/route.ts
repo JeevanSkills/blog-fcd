@@ -4,12 +4,11 @@ import clientPromise from "../db";
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
+    const { email, password, username, imageUrl } = await request.json();
 
-
-    if (!email || !password) {
+    if (!email || !password || !username) {
       return NextResponse.json(
-        { message: "Email and password are required." },
+        { message: "Email, password, and username are required." },
         { status: 400 }
       );
     }
@@ -22,7 +21,7 @@ export async function POST(request: Request) {
     }
 
     const dbClient = await clientPromise;
-    const db = dbClient.db(process.env.DB_NAME || "blog-faircode"); 
+    const db = dbClient.db(process.env.DB_NAME || "blog-faircode");
 
     const existingUser = await db.collection("users").findOne({ email });
 
@@ -30,7 +29,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { message: "User with this email already exists." },
         { status: 409 }
-      ); 
+      );
     }
 
     const hashedPassword = await hash(password, 12);
@@ -38,6 +37,9 @@ export async function POST(request: Request) {
     await db.collection("users").insertOne({
       email,
       password: hashedPassword,
+      username,
+      imageUrl: imageUrl || "", // Default to empty string if not provided
+      role: "user", // Default role
       createdAt: new Date(),
     });
 

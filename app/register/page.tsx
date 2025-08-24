@@ -4,9 +4,11 @@ import Link from "next/link";
 import { isValidEmail } from "@/utils/validation";
 
 export default function RegisterPage() {
+  const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
 
@@ -14,6 +16,11 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
     setSuccess("");
+
+    if (!username) {
+      setError("Username is required.");
+      return;
+    }
 
     if (!isValidEmail(email)) {
       setError("Invalid email format.");
@@ -36,7 +43,7 @@ export default function RegisterPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, email, password, imageUrl }),
       });
 
       const data = await res.json();
@@ -47,9 +54,11 @@ export default function RegisterPage() {
       }
 
       setSuccess(data.message);
+      setUsername("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
+      setImageUrl("");
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
       console.error(err);
@@ -63,6 +72,13 @@ export default function RegisterPage() {
           Create an Account
         </h2>
         <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="px-4 py-3 rounded-lg border border-sky-200 focus:outline-none focus:ring-2 focus:ring-sky-400 placeholder-sky-400"
+          />
           <input
             type="email"
             placeholder="Email"
@@ -82,6 +98,13 @@ export default function RegisterPage() {
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            className="px-4 py-3 rounded-lg border border-sky-200 focus:outline-none focus:ring-2 focus:ring-sky-400 placeholder-sky-400"
+          />
+          <input
+            type="text"
+            placeholder="Image URL (optional)"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
             className="px-4 py-3 rounded-lg border border-sky-200 focus:outline-none focus:ring-2 focus:ring-sky-400 placeholder-sky-400"
           />
           {error && <p className="text-red-500 text-xs text-left -mt-2">{error}</p>}
