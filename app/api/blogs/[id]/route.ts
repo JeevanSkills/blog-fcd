@@ -25,7 +25,7 @@ export async function GET(
     }
 
     return NextResponse.json(blog);
-  } catch (_error: any) {
+  } catch (e: unknown) {
     return new NextResponse(
       JSON.stringify({ error: "Failed to fetch blog" }),
       {
@@ -87,7 +87,7 @@ export async function PUT(
     );
 
     return NextResponse.json(result);
-  } catch (_error: any) {
+  } catch (e: unknown) {
     return new NextResponse(
       JSON.stringify({ error: "Failed to update blog" }),
       {
@@ -135,7 +135,7 @@ export async function DELETE(
     await collection.deleteOne({ _id: new ObjectId(params.id) });
 
     return new NextResponse(null, { status: 204 });
-  } catch (_error: any) {
+  } catch (e: unknown) {
     return new NextResponse(
       JSON.stringify({ error: "Failed to delete blog" }),
       {
