@@ -4,8 +4,9 @@ import { ObjectId } from "mongodb";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params: paramsPromise }: { params: Promise<{ id: string }> }
 ) {
+  const params = await paramsPromise;
   try {
     const dbClient = await clientPromise;
     const db = dbClient.db("blog-faircode");
