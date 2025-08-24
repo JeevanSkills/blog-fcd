@@ -16,13 +16,13 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['Blogs'];
+const settings = ['Profile', 'Logout'];
 
 function NavigationBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -45,12 +45,19 @@ function NavigationBar() {
     if (setting === 'Logout') {
       signOut({ callbackUrl: '/login' });
     } else if (setting === 'Profile') {
-      if (session?.user?.email) {
-        console.log(session.user);
+      if (session?.user?.id) {
         router.push(`/user/${session.user.id}`);
       }
     }
   };
+
+  if (status === 'loading') {
+    return null; // Or a loading spinner if desired
+  }
+
+  if (status === 'unauthenticated') {
+    return null; // Don't render navbar if not logged in
+  }
 
   return (
     <AppBar position="static">
@@ -103,7 +110,7 @@ function NavigationBar() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={() => router.push(`/${page.toLowerCase()}`)}>
+                <MenuItem key={page} onClick={() => router.push(page === 'Blogs' ? '/blogs' : `/${page.toLowerCase()}`)}>
                   <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
                 </MenuItem>
               ))}
@@ -132,7 +139,7 @@ function NavigationBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={() => router.push(`/${page.toLowerCase()}`)}
+                onClick={() => router.push(page === 'Blogs' ? '/' : `/${page.toLowerCase()}`)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}

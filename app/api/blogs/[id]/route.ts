@@ -73,7 +73,7 @@ export async function PUT(
       });
     }
 
-    if (blog.authorId.toString() !== session.user.email) {
+    if (blog.authorId.toString() !== session.user.id) {
       return new NextResponse(JSON.stringify({ error: "Forbidden" }), {
         status: 403,
         headers: { "Content-Type": "application/json" },
@@ -124,7 +124,7 @@ export async function DELETE(
       });
     }
 
-    if (blog.authorId.toString() !== session.user.email) {
+    if (blog.authorId.toString() !== session.user.id) {
       return new NextResponse(JSON.stringify({ error: "Forbidden" }), {
         status: 403,
         headers: { "Content-Type": "application/json" },
