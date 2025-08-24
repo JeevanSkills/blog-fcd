@@ -17,7 +17,7 @@ export async function GET(
       .toArray();
 
     return NextResponse.json(blogs);
-  } catch (error) {
+  } catch (_error: any) {
     return new NextResponse(
       JSON.stringify({ error: "Failed to fetch user blogs" }),
       {
